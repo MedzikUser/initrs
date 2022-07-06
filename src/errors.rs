@@ -16,6 +16,8 @@ pub enum Error {
     MountDev(nix::errno::Errno),
     #[error("failed to mount /sys: {0}")]
     MountSys(nix::errno::Errno),
+    #[error("failed to parse fstab: {0}")]
+    ParseFsTab(io::Error)
 }
 
 pub type Result<T> = std::result::Result<T, Error>;

@@ -5,7 +5,6 @@ mod mount;
 
 use std::ffi::CString;
 
-use libc::waitpid;
 use nix::unistd;
 
 use crate::errors::Error;
@@ -34,17 +33,20 @@ fn main() {
     // mount virtual filesystems
     mount::mount_vfs().expect("failed to mount filesystems");
 
+    // mount according to /etc/fstab
+    mount::local_mount().expect("failed to mount filesystems mentioned in fstab");
+
     // run neofetch
     command::run("/usr/bin/neofetch").expect("failed to run neofetch");
 
     // start shell session
     command::run("/bin/sh").expect("failed to run shell session");
 
-    loop {
-        let mut status = 0;
+    // loop {
+    //     let mut status = 0;
 
-        unsafe {
-            waitpid(0, &mut status, 0);
-        }
-    }
+    //     unsafe {
+    //         libc::waitpid(0, &mut status, 0);
+    //     }
+    // }
 }

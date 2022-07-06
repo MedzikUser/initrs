@@ -6,4 +6,13 @@ macro_rules! plus {
     }};
 }
 
+#[macro_export]
+macro_rules! plus_yellow {
+    ($($arg:tt)+) => {{
+        use colored::Colorize;
+        println!("{} {}", "[+]".yellow(), format!($($arg)+));
+    }};
+}
+
 pub use plus;
+pub use plus_yellow;
