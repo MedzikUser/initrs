@@ -31,8 +31,8 @@ fn main() {
         libc::putenv(CString::new("SHELL=/bin/sh").unwrap().into_raw());
     }
 
-    // mount tmpfs
-    mount::mount_tmpfs().expect("failed to mount filesystems");
+    // mount virtual filesystems
+    mount::mount_vfs().expect("failed to mount filesystems");
 
     // run neofetch
     command::run("/usr/bin/neofetch").expect("failed to run neofetch");
