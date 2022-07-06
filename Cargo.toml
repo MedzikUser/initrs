@@ -1,0 +1,18 @@
+[package]
+name = "initrs"
+version = "0.1.0"
+authors = ["MedzikUser <nivua1fn@duck.com>"]
+homepage = "https://github.com/MedzikUser/initrs"
+repository = "https://github.com/MedzikUser/initrs.git"
+license = "BSD-3-Clause"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+better-panic = "0.3.0"
+colored = "2.0.0"
+console = "0.15.0"
+libc = "0.2.126"
+nix = "0.24.1"
+thiserror = "1.0.31"
