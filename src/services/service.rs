@@ -35,14 +35,17 @@ pub struct Service {
 impl Service {
     /// Parse service config
     pub fn new<P: AsRef<Path>>(path: P) -> Result<Self> {
-        let content = fs::read_to_string(path).unwrap();
-        Ok(toml::from_str(&content).unwrap())
+        // read the service file into a string
+        let content = fs::read_to_string(path).map_err(Error::OpenServiceFile)?;
+        // parse the service fi;e
+        toml::from_str(&content).map_err(Error::ParseServiceFile)
     }
 
-    /// Run service
+    /// Run the service function
     pub fn run(&self) -> Result<()> {
         log::plus!("Starting service: {}", self.name);
 
+        // run all commands
         for cmd in self.exec_start.iter() {
             command::run(cmd).unwrap_log();
         }
@@ -53,16 +56,19 @@ impl Service {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Services {
+    /// `Vec` where it is located all services
     pub services: Vec<Service>,
 }
 
 impl Services {
     /// Parse the configuration of all services
     pub fn new() -> Result<Self> {
+        // get paths of the services file
         let paths = fs::read_dir(SERVICES_PATH).map_err(Error::ReadServicesDir)?;
 
         let mut services = Vec::new();
 
+        // parse services from files
         for path in paths {
             let path = path.map_err(Error::ReadServicesDir)?;
 
@@ -76,6 +82,7 @@ impl Services {
 
     /// Run all services
     pub fn run(&self) -> Result<()> {
+        // `Vec` which contains all the names of the services executed
         let mut executed = Vec::new();
 
         for service in self.services.iter() {
@@ -86,23 +93,7 @@ impl Services {
 
             // run all required services before this
             if let Some(depends) = &service.after {
-                for depend in depends {
-                    // if the service hasn't executed before
-                    if !executed.contains(depend) {
-                        // get dependency index in Vec
-                        let index = self
-                            .services
-                            .iter()
-                            .position(|x| &x.name == depend)
-                            .unwrap();
-
-                        // run service
-                        self.services[index].run().unwrap_log();
-
-                        // push service to executed
-                        executed.push(depend.clone())
-                    }
-                }
+                self.check_depends_and_run(depends, &mut executed);
             }
 
             // run service
@@ -112,5 +103,30 @@ impl Services {
         }
 
         Ok(())
+    }
+
+    fn check_depends_and_run(&self, depends: &Vec<String>, executed: &mut Vec<String>) {
+        for depend in depends {
+            // if the service hasn't executed before
+            if !executed.contains(depend) {
+                // get dependency index in Vec
+                let index = self
+                    .services
+                    .iter()
+                    .position(|x| &x.name == depend)
+                    .unwrap();
+
+                // check dependencies of the service
+                if let Some(depends) = &self.services[index].after {
+                    self.check_depends_and_run(depends, executed);
+                }
+
+                // run service
+                self.services[index].run().unwrap_log();
+
+                // push service to executed
+                executed.push(depend.clone())
+            }
+        }
     }
 }

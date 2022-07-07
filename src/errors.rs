@@ -14,6 +14,10 @@ pub enum Error {
     ParseFsTab(io::Error),
     #[error("failed to read services directory: {0}")]
     ReadServicesDir(io::Error),
+    #[error("failed to read service file content to string: {0}")]
+    OpenServiceFile(io::Error),
+    #[error("failed to parse service config: {0}")]
+    ParseServiceFile(toml::de::Error),
 }
 
 pub type Result<T> = std::result::Result<T, Error>;
