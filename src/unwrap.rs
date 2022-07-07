@@ -1,5 +1,3 @@
-use core::fmt;
-
 use crate::log;
 
 pub trait Custom<T> {
@@ -9,19 +7,19 @@ pub trait Custom<T> {
 
 impl<T, E> Custom<T> for Result<T, E>
 where
-    E: fmt::Debug,
+    E: ToString,
 {
     fn unwrap_log(self) {
         match self {
             Ok(_) => (),
-            Err(e) => log::error!("{e:?}"),
+            Err(e) => log::error!("{}", e.to_string()),
         }
     }
 
     fn expect_log(self, msg: &str) {
         match self {
             Ok(_) => (),
-            Err(e) => log::error!("{msg}: {e:?}"),
+            Err(e) => log::error!("{}: {}", msg, e.to_string()),
         }
     }
 }

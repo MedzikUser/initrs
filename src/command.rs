@@ -9,17 +9,33 @@ use crate::{
 pub fn run(line: &str) -> Result<()> {
     log::command!("{}", line);
 
+    let status = Command::new("sh")
+        .args(vec!["-c", line])
+        .status()
+        .map_err(Error::RunCommand)?;
+
+    if !status.success() {
+        Err(Error::ExitCommand(status.code().unwrap_or(-1)))?
+    }
+
+    Ok(())
+}
+
+/// Spawn without waiting for command EOF
+pub fn spawn(line: &str) -> Result<()> {
+    log::command!("{}", line);
+
     let mut args = line.split(' ').map(|arg| arg.to_string());
 
     if let Some(cmd) = args.next() {
-        // spawn command
-        let mut child = Command::new(cmd)
+        let status = Command::new(cmd)
             .args(args)
-            .spawn()
-            .map_err(Error::SpawnCommand)?;
+            .status()
+            .map_err(Error::RunCommand)?;
 
-        // wait for command EOF
-        child.wait().map_err(Error::CommandWait)?;
+        if !status.success() {
+            Err(Error::ExitCommand(status.code().unwrap_or(-1)))?
+        }
     }
 
     Ok(())

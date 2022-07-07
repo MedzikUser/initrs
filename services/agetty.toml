@@ -1,0 +1,10 @@
+Name = "agetty"
+Type = "deamon"
+ExecStart = [
+    "exec sh -c 'while true ; do agetty --noclear tty1 38400 linux ; done' &",
+    "exec sh -c 'while true ; do agetty tty2 38400 linux ; done' &",
+    "exec sh -c 'while true ; do agetty tty3 38400 linux ; done' &",
+    "exec sh -c 'while true ; do agetty tty4 38400 linux ; done' &",
+    "exec sh -c 'while true ; do agetty tty5 38400 linux ; done' &",
+    "exec sh -c 'while true ; do agetty tty6 38400 linux ; done' &"
+]

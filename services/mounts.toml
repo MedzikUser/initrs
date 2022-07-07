@@ -1,0 +1,16 @@
+Name = "mounts"
+Type = "oneshot"
+ExecStart = [
+    # mount all filesystems mentioned in fstab
+    "mount -a",
+    # mount virtual filesystems
+    "mount -n -t proc proc /proc --mkdir",
+    "mount -n -t devtmpfs devtmpfs /dev --mkdir",
+    "mount -n -t sysfs sysfs /sys --mkdir",
+    "mount -n -t tmpfs tmpfs /run --mkdir",
+    # mount /tmp
+    "if [ -f /etc/sysconfig/mounts ] ; then . /etc/sysconfig/mounts ; if [ \"${MOUNT_TMPFS}\" = \"true\" ] ; then mount -n -t tmpfs tmpfs /tmp ; fi ; fi"
+]
+ExecStop = [
+    "umount -a"
+]

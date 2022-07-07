@@ -6,16 +6,10 @@ use thiserror::Error;
 pub enum Error {
     #[error("failed to set sid: {0}")]
     SetSid(nix::errno::Errno),
-    #[error("failed to spawn command: {0}")]
-    SpawnCommand(io::Error),
-    #[error("failed to wait for a command: {0}")]
-    CommandWait(io::Error),
-    #[error("failed to mount /proc: {0}")]
-    MountProc(nix::errno::Errno),
-    #[error("failed to mount /dev: {0}")]
-    MountDev(nix::errno::Errno),
-    #[error("failed to mount /sys: {0}")]
-    MountSys(nix::errno::Errno),
+    #[error("failed to run command: {0}")]
+    RunCommand(io::Error),
+    #[error("command exits with non-successful code: {0}")]
+    ExitCommand(i32),
     #[error("failed to parse fstab: {0}")]
     ParseFsTab(io::Error),
     #[error("failed to read services directory: {0}")]

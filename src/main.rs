@@ -1,6 +1,6 @@
 use std::ffi::CString;
 
-use initrs::{command, errors::Error, mount, unwrap::Custom};
+use initrs::{errors::Error, services::Services, unwrap::Custom};
 use nix::unistd;
 
 const PATH_ENV: &str = "PATH=/sbin:/usr/sbin:/bin:/usr/bin";
@@ -23,23 +23,17 @@ fn main() {
         libc::putenv(CString::new(SHELL_ENV).unwrap().into_raw());
     }
 
-    // mount virtual filesystems
-    mount::mount_vfs().expect_log("failed to mount file systems");
+    // run services
+    Services::new()
+        .unwrap()
+        .run()
+        .expect_log("failed to run services");
 
-    // mount according to /etc/fstab
-    mount::local_mount().expect_log("failed to mount filesystems mentioned in fstab");
+    loop {
+        let mut status = 0;
 
-    // run neofetch
-    command::run("/usr/bin/neofetch").expect_log("failed to run neofetch");
-
-    // start shell session
-    command::run("/bin/sh").expect_log("failed to run shell session");
-
-    // loop {
-    //     let mut status = 0;
-
-    //     unsafe {
-    //         libc::waitpid(0, &mut status, 0);
-    //     }
-    // }
+        unsafe {
+            libc::waitpid(0, &mut status, 0);
+        }
+    }
 }
