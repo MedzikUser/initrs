@@ -7,12 +7,9 @@ repository = "https://github.com/MedzikUser/initrs.git"
 license = "BSD-3-Clause"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-better-panic = "0.3.0"
 serde = { version = "1.0.138", features = ["derive"] }
 libc = "0.2.126"
-nix = "0.24.1"
+nix = { version = "0.24.1", default-features = false, features = ["ucontext"] }
 thiserror = "1.0.31"
 toml = "0.5.9"

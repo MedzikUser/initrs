@@ -7,11 +7,6 @@ const PATH_ENV: &str = "PATH=/sbin:/usr/sbin:/bin:/usr/bin";
 const SHELL_ENV: &str = "SHELL=/bin/sh";
 
 fn main() {
-    better_panic::Settings::new()
-        .message("Init panicked.")
-        .verbosity(better_panic::Verbosity::Minimal)
-        .install();
-
     // Create new session and set process group id.
     unistd::setsid()
         .map_err(Error::SetSid)
