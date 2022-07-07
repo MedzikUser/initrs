@@ -1,18 +1,24 @@
 #[macro_export]
 macro_rules! plus {
     ($($arg:tt)+) => {{
-        use colored::Colorize;
-        println!("{} {}", "[+]".green(), format!($($arg)+));
+        println!("{} {}", format!("{}::{}", $crate::colors::GREEN, $crate::colors::RESET), format!($($arg)+));
     }};
 }
 
 #[macro_export]
-macro_rules! plus_yellow {
+macro_rules! command {
     ($($arg:tt)+) => {{
-        use colored::Colorize;
-        println!("{} {}", "[+]".yellow(), format!($($arg)+));
+        println!("{} {}", format!("{}[+]{}", $crate::colors::GREEN, $crate::colors::RESET), format!($($arg)+));
     }};
 }
 
+#[macro_export]
+macro_rules! error {
+    ($($arg:tt)+) => {{
+        println!("{} {}", format!("{}[-]{}", $crate::colors::RED, $crate::colors::RESET), format!($($arg)+));
+    }};
+}
+
+pub use command;
+pub use error;
 pub use plus;
-pub use plus_yellow;

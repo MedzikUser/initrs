@@ -17,7 +17,9 @@ pub enum Error {
     #[error("failed to mount /sys: {0}")]
     MountSys(nix::errno::Errno),
     #[error("failed to parse fstab: {0}")]
-    ParseFsTab(io::Error)
+    ParseFsTab(io::Error),
+    #[error("failed to read services directory: {0}")]
+    ReadServicesDir(io::Error),
 }
 
 pub type Result<T> = std::result::Result<T, Error>;

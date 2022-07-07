@@ -7,7 +7,7 @@ use crate::{
 
 /// Spawn and wait for command executed
 pub fn run(line: &str) -> Result<()> {
-    log::plus_yellow!("{}", line);
+    log::command!("{}", line);
 
     let mut args = line.split(' ').map(|arg| arg.to_string());
 

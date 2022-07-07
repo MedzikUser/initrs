@@ -1,13 +1,10 @@
-pub mod command;
-pub mod errors;
-mod log;
-mod mount;
-
 use std::ffi::CString;
 
+use initrs::{command, errors::Error, mount, unwrap::Custom};
 use nix::unistd;
 
-use crate::errors::Error;
+const PATH_ENV: &str = "PATH=/sbin:/usr/sbin:/bin:/usr/bin";
+const SHELL_ENV: &str = "SHELL=/bin/sh";
 
 fn main() {
     better_panic::Settings::new()
@@ -18,29 +15,25 @@ fn main() {
     // Create new session and set process group id.
     unistd::setsid()
         .map_err(Error::SetSid)
-        .expect("failed to set sid");
+        .expect_log("failed to set sid");
 
     // put env variables
     unsafe {
-        libc::putenv(
-            CString::new("PATH=/sbin:/usr/sbin:/bin:/usr/bin")
-                .unwrap()
-                .into_raw(),
-        );
-        libc::putenv(CString::new("SHELL=/bin/sh").unwrap().into_raw());
+        libc::putenv(CString::new(PATH_ENV).unwrap().into_raw());
+        libc::putenv(CString::new(SHELL_ENV).unwrap().into_raw());
     }
 
     // mount virtual filesystems
-    mount::mount_vfs().expect("failed to mount filesystems");
+    mount::mount_vfs().expect_log("failed to mount file systems");
 
     // mount according to /etc/fstab
-    mount::local_mount().expect("failed to mount filesystems mentioned in fstab");
+    mount::local_mount().expect_log("failed to mount filesystems mentioned in fstab");
 
     // run neofetch
-    command::run("/usr/bin/neofetch").expect("failed to run neofetch");
+    command::run("/usr/bin/neofetch").expect_log("failed to run neofetch");
 
     // start shell session
-    command::run("/bin/sh").expect("failed to run shell session");
+    command::run("/bin/sh").expect_log("failed to run shell session");
 
     // loop {
     //     let mut status = 0;
