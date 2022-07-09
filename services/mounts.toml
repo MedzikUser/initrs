@@ -4,12 +4,11 @@ ExecStart = [
     # mount all filesystems mentioned in fstab
     "mount -a",
     # mount virtual filesystems
-    "mount -n -t proc proc /proc --mkdir",
-    "mount -n -t devtmpfs devtmpfs /dev --mkdir",
-    "mount -n -t sysfs sysfs /sys --mkdir",
-    "mount -n -t tmpfs tmpfs /run --mkdir",
-    # mount /tmp
-    "if [ -f /etc/sysconfig/mounts ] ; then . /etc/sysconfig/mounts ; if [ \"${MOUNT_TMPFS}\" = \"true\" ] ; then mount -n -t tmpfs tmpfs /tmp ; fi ; fi"
+    "if mountpoint /proc &> /dev/null ; then mount -n -t proc proc /proc --mkdir ; fi",
+    "if mountpoint /dev &> /dev/null ; then mount -n -t devtmpfs devtmpfs /dev --mkdir ; fi",
+    "if mountpoint /sys &> /dev/null ; then mount -n -t sysfs sysfs /sys --mkdir ; fi",
+    "if mountpoint /run &> /dev/null ; then mount -n -t tmpfs tmpfs /run --mkdir ; fi",
+    "if mountpoint /tmp &> /dev/null ; then mount tmpfs tmpfs /tmp --mkdir ; chmod 1777 /tmp ; fi"
 ]
 ExecStop = [
     "umount -a"

@@ -1,9 +1,0 @@
-Name = "machine-id"
-Type = "script"
-After = ["mounts"]
-ExecStart = [
-    "echo $(cat /proc/uptime | cut -d \" \" -f 1 | sed 's/\\..*//g') > /etc/machine-id"
-]
-ExecStop = [
-    "rm -rf /etc/machind-id"
-]

@@ -3,7 +3,7 @@ use std::{fs, path::Path};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    command,
+    init::command,
     errors::{Error, Result},
     log,
     unwrap::Custom,

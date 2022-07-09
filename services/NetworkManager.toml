@@ -1,0 +1,8 @@
+Name = "NetworkManager"
+Type = "deamon"
+After = ["dbus"]
+ExecStart = [
+    "install -dm755 /run/NetworkManager",
+    "/usr/sbin/NetworkManager -- --pid-file /run/NetworkManager/NetworkManager.pid &"
+]
+ExecStop = ["pkill NetworkManager"]

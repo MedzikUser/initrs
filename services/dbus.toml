@@ -1,6 +1,6 @@
 Name = "dbus"
 Type = "deamon"
-After = ["machine-id"]
+After = ["mounts"]
 ExecStart = [
     "dbus-uuidgen --ensure=/etc/machine-id",
     "install -dm755 /run/dbus",
@@ -8,5 +8,6 @@ ExecStart = [
 ]
 ExecStop = [
     "pkill dbus-deamon",
-    "rm /run/dbus/system_bus_socket"
+    "rm /run/dbus/system_bus_socket",
+    "rm /etc/machind-id"
 ]

@@ -1,12 +1,18 @@
-use std::ffi::CString;
+use std::{ffi::CString, process};
 
-use initrs::{errors::Error, services::Services, unwrap::Custom};
+use initrs::{errors::Error, init::services::Services, unwrap::Custom, log};
 use nix::unistd;
 
 const PATH_ENV: &str = "PATH=/sbin:/usr/sbin:/bin:/usr/bin";
 const SHELL_ENV: &str = "SHELL=/bin/sh";
 
 fn main() {
+    // init muse be on PID 1
+    if process::id() != 1 {
+        log::error!("Init must be executed as PID 1");
+        process::exit(1);
+    }
+
     // Create new session and set process group id.
     unistd::setsid()
         .map_err(Error::SetSid)

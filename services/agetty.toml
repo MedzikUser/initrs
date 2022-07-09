@@ -1,5 +1,6 @@
 Name = "agetty"
 Type = "deamon"
+After = ["io"]
 ExecStart = [
     "exec sh -c 'while true ; do agetty --noclear tty1 38400 linux ; done' &",
     "exec sh -c 'while true ; do agetty tty2 38400 linux ; done' &",
