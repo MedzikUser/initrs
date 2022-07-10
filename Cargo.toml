@@ -8,8 +8,10 @@ license = "BSD-3-Clause"
 edition = "2021"
 
 [dependencies]
-serde = { version = "1.0.138", features = ["derive"] }
 libc = "0.2.126"
-nix = { version = "0.24.1", default-features = false, features = ["ucontext"] }
+nix = "0.24.1"
 thiserror = "1.0.31"
 toml = "0.5.9"
+clap = { version = "3.2.8", features = ["derive"] }
+serde = { version = "1.0.138", features = ["derive"] }
+clap_mangen = "0.1.10"

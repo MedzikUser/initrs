@@ -1,6 +1,6 @@
 use std::{ffi::CString, process};
 
-use initrs::{errors::Error, init::services::Services, unwrap::Custom, log};
+use initrs::{errors::Error, init::services::Services, log, unwrap::Custom};
 use nix::unistd;
 
 const PATH_ENV: &str = "PATH=/sbin:/usr/sbin:/bin:/usr/bin";

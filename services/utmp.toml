@@ -1,0 +1,7 @@
+Name = "utmp"
+Type = "oneshot"
+After = ["mounts"]
+ExecStart = [
+    "mkdir -p /var/run",
+    "echo > /var/run/utmp"
+]
