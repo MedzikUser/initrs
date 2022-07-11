@@ -6,11 +6,8 @@ use crate::{
     errors::{Error, Result},
     init::command,
     log,
-    unwrap::Custom,
+    unwrap::Custom, ENABLED_SERVICES_DIR,
 };
-
-/// The path where the services to be launched are located.
-pub const SERVICES_PATH: &str = "/etc/initrs/services/";
 
 /// Service schema
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -64,7 +61,7 @@ impl Services {
     /// Parse the configuration of all services
     pub fn new() -> Result<Self> {
         // get paths of the services file
-        let paths = fs::read_dir(SERVICES_PATH).map_err(Error::ReadServicesDir)?;
+        let paths = fs::read_dir(ENABLED_SERVICES_DIR).map_err(Error::ReadServicesDir)?;
 
         let mut services = Vec::new();
 
