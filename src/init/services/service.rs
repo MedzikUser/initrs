@@ -43,7 +43,7 @@ impl Service {
 
     /// Run the service function
     pub fn run(&self) -> Result<()> {
-        log::plus!("Starting service: {}", self.name);
+        log::info!("Starting service: {}", self.name);
 
         // run all commands
         for cmd in self.exec_start.iter() {

@@ -1,17 +1,14 @@
 use std::{os::unix::fs, path::Path};
 
-use nix::unistd::Uid;
-
 use crate::{
     errors::{Error, Result},
+    initcli::utils,
     log, ENABLED_SERVICES_DIR, SERVICES_DIR,
 };
 
 pub fn enable(service: &str) -> Result<()> {
     // must be run as root
-    if !Uid::effective().is_root() {
-        Err(Error::AccessDenied)?
-    }
+    utils::root::check_run_user()?;
 
     // path to the service
     let service_path = format!("{SERVICES_DIR}/{service}.toml");
@@ -32,7 +29,7 @@ pub fn enable(service: &str) -> Result<()> {
     // create symlink
     fs::symlink(service_path, symlink_service_path).map_err(Error::CreateSymlink)?;
 
-    log::command!("Service `{service}` enabled");
+    log::success!("Service `{service}` enabled");
 
     Ok(())
 }

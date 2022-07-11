@@ -1,17 +1,14 @@
 use std::{fs, path::Path};
 
-use nix::unistd::Uid;
-
 use crate::{
     errors::{Error, Result},
+    initcli::utils,
     log, ENABLED_SERVICES_DIR,
 };
 
 pub fn disable(service: &str) -> Result<()> {
     // must be run as root
-    if !Uid::effective().is_root() {
-        Err(Error::AccessDenied)?
-    }
+    utils::root::check_run_user()?;
 
     // path to the service symlink
     let symlink_service_path = format!("{ENABLED_SERVICES_DIR}/{service}");
@@ -24,7 +21,7 @@ pub fn disable(service: &str) -> Result<()> {
     // delete enabled symlink
     fs::remove_file(symlink_service_path).map_err(Error::DeleteFile)?;
 
-    log::command!("Service `{service}` disabled");
+    log::success!("Service `{service}` disabled");
 
     Ok(())
 }

@@ -1,4 +1,4 @@
-use clap::{Parser, Subcommand, IntoApp};
+use clap::{IntoApp, Parser, Subcommand};
 
 use crate::log;
 
@@ -24,7 +24,7 @@ enum Command {
     Enable { service: String },
     #[clap(about = "Remove the service from startup", display_order = 2)]
     Disable { service: String },
-    #[clap(about = "Generate man page")]
+    #[clap(about = "Generate man page", display_order = 3)]
     Manpage,
 }
 

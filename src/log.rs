@@ -1,12 +1,12 @@
 #[macro_export]
-macro_rules! plus {
+macro_rules! info {
     ($($arg:tt)+) => {{
         println!("{} {}", format!("{}::{}", $crate::colors::GREEN, $crate::colors::RESET), format!($($arg)+));
     }};
 }
 
 #[macro_export]
-macro_rules! command {
+macro_rules! success {
     ($($arg:tt)+) => {{
         println!("{} {}", format!("{}[+]{}", $crate::colors::GREEN, $crate::colors::RESET), format!($($arg)+));
     }};
@@ -19,6 +19,6 @@ macro_rules! error {
     }};
 }
 
-pub use command;
 pub use error;
-pub use plus;
+pub use info;
+pub use success;
